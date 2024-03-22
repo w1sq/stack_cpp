@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <iostream>
-#include <cstdlib>
 template <typename T>
 class Stack
 {
@@ -187,12 +186,16 @@ Stack<T>::~Stack()
 template <typename T>
 Stack<T> &Stack<T>::operator=(const Stack<T> &s)
 {
-    VERIFY_CONTRACT(this->ok(), "ERROR: left operand of copy assignment is invalid");
-    VERIFY_CONTRACT(s.ok(), "ERROR: right operand of copy assignment is invalid");
-
-    // Handle self-assignment
-    if (*this == s)
-        return *this;
+    if (!this->ok())
+    {
+        std::cout << "ERROR: left operand of copy assignment is invalid" << std::endl;
+        exit(1);
+    }
+    if (!s.ok())
+    {
+        std::cout << "ERROR: right operand of copy assignment is invalid" << std::endl;
+        exit(1);
+    }
 
     // Delete previous data
     delete[] array;
@@ -205,7 +208,11 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &s)
     Capacity = s.Capacity;
     std::copy_n(s.array, s.Length, array); // Copy all elements
 
-    VERIFY_CONTRACT(this->ok(), "ERROR: cannot copy stack from assignment (probable memory allocation fault)");
+    if (!this->ok())
+    {
+        std::cout << "ERROR: cannot copy stack from assignment (probable memory allocation fault)" << std::endl;
+        exit(1);
+    }
     return *this;
 }
 
@@ -213,12 +220,16 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &s)
 template <typename T>
 Stack<T> &Stack<T>::operator=(Stack<T> &&s)
 {
-    VERIFY_CONTRACT(this->ok(), "ERROR: left operand of move assignment is invalid");
-    VERIFY_CONTRACT(s.ok(), "ERROR: right operand of move assignment is invalid");
-
-    // Handle self-assignment
-    if (*this == s)
-        return *this;
+    if (!this->ok())
+    {
+        std::cout << "ERROR: left operand of move assignment is invalid" << std::endl;
+        exit(1);
+    }
+    if (!s.ok())
+    {
+        std::cout << "ERROR: right operand of move assignment is invalid" << std::endl;
+        exit(1);
+    }
 
     // Delete previous data
     delete[] array;
@@ -246,9 +257,6 @@ Stack<T> &Stack<T>::operator=(Stack<T> &&s)
     return *this;
 }
 
-/////////////
-// Getters //
-/////////////
 template <typename T>
 unsigned Stack<T>::size()
 {
@@ -326,7 +334,7 @@ template <typename T>
 template <typename... Args>
 void Stack<T>::emplace(Args &&...args)
 {
-    if (!this->ok)
+    if (!this->ok())
     {
         std::cout << "ERROR: cannot emplace to invalid stack" << std::endl;
         exit(1);
