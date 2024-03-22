@@ -4,9 +4,6 @@ project(stack_cpp LANGUAGES CXX)
 
 add_subdirectory(stack)
 
-add_executable(main main.cpp)
-target_link_libraries(main stack)
-
 include(FetchContent)
 FetchContent_Declare(
     googletest
