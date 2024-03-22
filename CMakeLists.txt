@@ -14,6 +14,3 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 enable_testing()
-
-# add_executable(tests tests.cpp)
-# target_link_libraries(tests long_arithmetics gtest gtest_main)

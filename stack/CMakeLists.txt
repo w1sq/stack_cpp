@@ -1,4 +1,5 @@
-file (GLOB_RECURSE SOURCES "src/*.cpp")
-add_library(stack SHARED ${SOURCES})
+add_library(stack INTERFACE)
+target_include_directories(stack INTERFACE include)
 
-target_include_directories(stack PUBLIC include)
+add_executable(stack_tests tests/tests.cpp)
+target_link_libraries(stack_tests stack gtest gtest_main)
