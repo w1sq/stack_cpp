@@ -12,12 +12,12 @@ class Stack
     void shrink();
 
 public:
-    Stack();                             // Construct an empty stack with capacity = 2
-    Stack(const Stack &s);               // Copy constructor
-    Stack(Stack &&s);                    // Move constructor
-    Stack<T> &operator=(const Stack &s); // Copy assignment
-    Stack<T> &operator=(Stack &&s);      // Move assignment
-    ~Stack();                            // Destructor (free the allocated memory)
+    Stack();                                 // Empty stack constructor
+    Stack(const Stack &stack);               // Copy constructor
+    Stack(Stack &&stack);                    // Move constructor
+    Stack<T> &operator=(const Stack &stack); // Copy assignment
+    Stack<T> &operator=(Stack &&stack);      // Move assignment
+    ~Stack();                                // Destructor (free the allocated memory)
 
     unsigned size();
     unsigned capacity();
@@ -97,7 +97,7 @@ void Stack<T>::shrink()
 template <typename T>
 bool Stack<T>::ok() const
 {
-    return (array != nullptr) && (Length <= Capacity) && (Capacity > 0U);
+    return (array != nullptr) && (Length <= Capacity) && (Capacity > 0);
 }
 
 // Default constructor
@@ -119,22 +119,22 @@ Stack<T>::Stack() : Length(0), Capacity(2)
 
 // Copy constructor
 template <typename T>
-Stack<T>::Stack(const Stack<T> &s) : Length(s.Length), Capacity(s.Capacity)
+Stack<T>::Stack(const Stack<T> &stack) : Length(stack.Length), Capacity(stack.Capacity)
 {
-    if (!s.ok())
+    if (!stack.ok())
     {
         std::cout << "ERROR: cannot copy stack from invalid origin" << std::endl;
         exit(1);
     }
 
-    array = new T[s.Capacity]; // Allocate memory
+    array = new T[stack.Capacity]; // Allocate memory
     if (array == nullptr)
     {
         std::cout << "ERROR: cannot allocate memory for stack" << std::endl;
         exit(1);
     }
 
-    std::copy_n(s.array, s.Length, array); // Copy all elements
+    std::copy_n(stack.array, stack.Length, array); // Copy all elements
     if (!this->ok())
     {
         std::cout << "ERROR: cannot construct stack by copying" << std::endl;
@@ -144,20 +144,20 @@ Stack<T>::Stack(const Stack<T> &s) : Length(s.Length), Capacity(s.Capacity)
 
 // Move constructor
 template <typename T>
-Stack<T>::Stack(Stack<T> &&s)
+Stack<T>::Stack(Stack<T> &&stack)
 {
-    if (!s.ok())
+    if (!stack.ok())
     {
         std::cout << "ERROR: cannot move stack from invalid origin" << std::endl;
         exit(1);
     }
-    Length = s.Length;
-    Capacity = s.Capacity;
-    array = s.array;
+    Length = stack.Length;
+    Capacity = stack.Capacity;
+    array = stack.array;
 
-    s.array = nullptr;
-    s.Length = 0;
-    s.Capacity = 0;
+    stack.array = nullptr;
+    stack.Length = 0;
+    stack.Capacity = 0;
 
     if (!this->ok())
     {
@@ -184,14 +184,14 @@ Stack<T>::~Stack()
 
 // Copy assignment
 template <typename T>
-Stack<T> &Stack<T>::operator=(const Stack<T> &s)
+Stack<T> &Stack<T>::operator=(const Stack<T> &stack)
 {
     if (!this->ok())
     {
         std::cout << "ERROR: left operand of copy assignment is invalid" << std::endl;
         exit(1);
     }
-    if (!s.ok())
+    if (!stack.ok())
     {
         std::cout << "ERROR: right operand of copy assignment is invalid" << std::endl;
         exit(1);
@@ -201,12 +201,12 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &s)
     delete[] array;
 
     // Allocate new memory
-    array = new T[s.Capacity];
+    array = new T[stack.Capacity];
 
     // Copy
-    Length = s.Length;
-    Capacity = s.Capacity;
-    std::copy_n(s.array, s.Length, array); // Copy all elements
+    Length = stack.Length;
+    Capacity = stack.Capacity;
+    std::copy_n(stack.array, stack.Length, array); // Copy all elements
 
     if (!this->ok())
     {
@@ -218,14 +218,14 @@ Stack<T> &Stack<T>::operator=(const Stack<T> &s)
 
 // Move assignment
 template <typename T>
-Stack<T> &Stack<T>::operator=(Stack<T> &&s)
+Stack<T> &Stack<T>::operator=(Stack<T> &&stack)
 {
     if (!this->ok())
     {
         std::cout << "ERROR: left operand of move assignment is invalid" << std::endl;
         exit(1);
     }
-    if (!s.ok())
+    if (!stack.ok())
     {
         std::cout << "ERROR: right operand of move assignment is invalid" << std::endl;
         exit(1);
@@ -235,21 +235,21 @@ Stack<T> &Stack<T>::operator=(Stack<T> &&s)
     delete[] array;
 
     // Move
-    array = s, array;
-    Length = s.Length;
-    Capacity = s.Capacity;
+    array = stack, array;
+    Length = stack.Length;
+    Capacity = stack.Capacity;
 
     // Clear origin
-    s.array = nullptr;
-    s.Length = 0;
-    s.Capacity = 0;
+    stack.array = nullptr;
+    stack.Length = 0;
+    stack.Capacity = 0;
 
     if (!this->ok())
     {
         std::cout << "ERROR: cannot move stack from assignment" << std::endl;
         exit(1);
     }
-    if (s.ok())
+    if (stack.ok())
     {
         std::cout << "ERROR: move assignment is not destructive for origin" << std::endl;
         exit(1);
